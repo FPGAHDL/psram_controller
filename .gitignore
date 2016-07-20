@@ -1,0 +1,5 @@
+*.swp
+
+ise_project/*
+!ise_project/*.xise
+!ise_project/*.ucf
