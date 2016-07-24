@@ -21,7 +21,9 @@ module psram_burst_controller #
 //    input stall_o,
     output psram_clk,
     output [psram_address_width-1:0] psram_adr,
+    input [data_width-1:0] psram_dat_i,
     output [data_width-1:0] psram_dat_o,
+    output reg psram_data_oe,
     output psram_we_n,
     output reg psram_ce_n,
     output reg psram_adv_n,
@@ -113,6 +115,7 @@ always@(*)begin
     psram_ce_n = 1;
     psram_adv_n = 1;
     psram_oe_n = 1;
+    psram_data_oe = 0;
 
     load_we = 0;
     load_address = 0;
@@ -137,6 +140,7 @@ always@(*)begin
     end
     else if(state == state_xfer)begin
         psram_ce_n = 0;
+        psram_data_oe = we_reg;
         if(counter < burst_size)begin
             counter_en = 1;
             psram_oe_n = we_reg;
