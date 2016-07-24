@@ -29,8 +29,7 @@ module psram_burst_controller_test;
     reg clk_i;
     reg [15:0] adr_i;
     reg [15:0] dat_i;
-    reg stb_i;
-    reg cyc_i;
+    reg start_i;
     reg we_i;
     reg [15:0] psram_dat_i;
 
@@ -52,8 +51,7 @@ module psram_burst_controller_test;
         .adr_i(adr_i),
         .dat_i(dat_i),
         .dat_o(dat_o),
-        .stb_i(stb_i),
-        .cyc_i(cyc_i),
+        .start_i(start_i),
         .we_i(we_i),
         .psram_clk(psram_clk),
         .psram_adr(psram_adr),
@@ -72,8 +70,7 @@ module psram_burst_controller_test;
         clk_i = 0;
         adr_i = 0;
         dat_i = 0;
-        stb_i = 0;
-        cyc_i = 0;
+        start_i = 0;
         we_i = 0;
         psram_dat_i = 0;
         #5;
@@ -85,8 +82,7 @@ module psram_burst_controller_test;
         clk_i = 0;
         adr_i = 1234567;
         dat_i = 89;
-        stb_i = 1;
-        cyc_i = 1;
+        start_i = 1;
         we_i = 1;
         #5;
         clk_i = 1;
@@ -97,8 +93,7 @@ module psram_burst_controller_test;
             clk_i = 0;
             adr_i = 0;
             dat_i = 0;
-            stb_i = 1;
-            cyc_i = 1;
+            start_i = 1;
             we_i = 1;
             #5;
             clk_i = 1;
@@ -110,8 +105,7 @@ module psram_burst_controller_test;
             clk_i = 0;
             adr_i = 0;
             dat_i = 0;
-            stb_i = 0;
-            cyc_i = 0;
+            start_i = 0;
             we_i = 1;
             #5;
             clk_i = 1;

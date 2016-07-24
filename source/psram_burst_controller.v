@@ -9,16 +9,15 @@ module psram_burst_controller #
 )
 
 (
+    //Inteface
     input rst_i,
     input clk_i,
     input [address_width-1:0] adr_i,
     input [data_width-1:0] dat_i,
     output [data_width-1:0] dat_o,
-    input stb_i,
-    input cyc_i,
+    input start_i,
     input we_i,
-//    input ack_o,
-//    input stall_o,
+    //PSRAM signals
     output psram_clk,
     output [psram_address_width-1:0] psram_adr,
     input [data_width-1:0] psram_dat_i,
@@ -81,13 +80,11 @@ always@(posedge clk_i)begin
         state <= next_state;
 end
 
-wire wishbone_cyc_start =  cyc_i && stb_i;
-
 // next state decoder
 always@(*)begin
     next_state = state_idle;
     if(state == state_idle)begin
-        if(wishbone_cyc_start)
+        if(start_i)
            next_state = state_address_set;
         else
            next_state = state_idle;
@@ -122,7 +119,7 @@ always@(*)begin
     counter_en = 0;
 
     if(state == state_idle)begin
-        if(wishbone_cyc_start)begin
+        if(start_i)begin
             load_we = 1;
             load_address = 1;
         end
