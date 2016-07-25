@@ -63,52 +63,74 @@ module psram_burst_controller_test;
         .psram_adv_n(psram_adv_n),
         .psram_oe_n(psram_oe_n)
     );
+    integer counter = 55;
 
     initial begin
         // Reset
         rst_i = 1;
         clk_i = 0;
         adr_i = 0;
-        dat_i = 0;
+        dat_i = counter + 10;
         start_i = 0;
         we_i = 0;
-        psram_dat_i = 0;
+        psram_dat_i = counter;
         #5;
         clk_i = 1;
+        counter = counter + 1;
         #5;
 
-        // Start
+        // Start write
         rst_i = 0;
         clk_i = 0;
         adr_i = 1234567;
-        dat_i = 89;
+        dat_i = counter + 10;
         start_i = 1;
         we_i = 1;
+        psram_dat_i = counter;
         #5;
         clk_i = 1;
+        counter = counter + 1;
         #5;
 
-        repeat(32)begin
+
+        repeat(50)begin
             rst_i = 0;
             clk_i = 0;
             adr_i = 0;
-            dat_i = 0;
-            start_i = 1;
+            dat_i = counter + 20;
+            start_i = 0;
             we_i = 1;
+            psram_dat_i = counter;
             #5;
+            counter = counter + 1;
             clk_i = 1;
             #5;
         end
 
-        repeat(32)begin
+        // Start read cycle
+        rst_i = 0;
+        clk_i = 0;
+        adr_i = 256;
+        dat_i = counter + 10;
+        start_i = 1;
+        we_i = 0;
+        psram_dat_i = counter;
+        #5;
+        clk_i = 1;
+        counter = counter + 1;
+        #5;
+
+        repeat(50)begin
             rst_i = 0;
             clk_i = 0;
             adr_i = 0;
-            dat_i = 0;
+            dat_i = counter + 10;
             start_i = 0;
             we_i = 1;
+            psram_dat_i = counter;
             #5;
             clk_i = 1;
+            counter = counter + 1;
             #5;
         end
 

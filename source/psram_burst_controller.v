@@ -72,6 +72,27 @@ always@(posedge clk_i)begin
         we_reg <= we_i;
 end
 
+reg psram_dat_i_reg_en;
+reg [data_width-1:0] psram_dat_i_reg;
+
+//  psram_dat_i_reg save
+always@(posedge clk_i)begin
+    if(rst_i)
+         psram_dat_i_reg <= 0;
+    else if(psram_dat_i_reg_en)
+         psram_dat_i_reg <= psram_dat_i;
+end
+
+reg [data_width-1:0] dat_i_reg;
+
+//  psram_dat_i_reg save
+always@(posedge clk_i)begin
+    if(rst_i)
+         dat_i_reg <= 0;
+    else
+         dat_i_reg <= dat_i;
+end
+
 // Update state register
 always@(posedge clk_i)begin
     if(rst_i)
@@ -117,6 +138,7 @@ always@(*)begin
     load_we = 0;
     load_address = 0;
     counter_en = 0;
+    psram_dat_i_reg_en = 0;
 
     if(state == state_idle)begin
         if(start_i)begin
@@ -142,14 +164,16 @@ always@(*)begin
             counter_en = 1;
             psram_oe_n = we_reg;
         end
+        if(!we_reg)
+            psram_dat_i_reg_en = 1;
     end
 end
 
 assign psram_we_n = ~we_reg;
 assign psram_adr = address_reg;
-assign psram_dat_o = (state == state_xfer) ? counter : 16'hffff;
+assign psram_dat_o = (state == state_xfer) ? dat_i_reg : 16'hffff;
 assign psram_clk = ~clk_i;
 
-assign dat_o = 0;
+assign dat_o = psram_dat_i_reg;
 
 endmodule
